@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Generator with MP Animesan</title>
+<!-- Font Awesome for Instagram Icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+    margin: 0;
+    background: #0f172a;
+    color: white;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: hotpink;
+    padding: 10px 20px;
+}
+.navbar img {
+    height: 40px;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 14px;
+    border-radius: 6px;
+}
+
+/* Section Styling */
+.section {
+    flex: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.active {
+    display: flex;
+}
+
+/* Form Section - Center */
+.form-box {
+    text-align: center;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+input {
+    width: 250px;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 6px;
+    border: none;
+}
+button {
+    background: #38bdf8;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+/* Loader Animation */
+#loader {
+    margin-top: 20px;
+}
+.bars {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    height: 120px;
+    justify-content: center;
+}
+.bar {
+    width: 6px;
+    background: #38bdf8;
+    border-radius: 3px;
+    animation: pulse 1s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+@keyframes pulse {
+    0%, 100% { height: 20px; }
+    50% { height: 100px; }
+}
+
+/* Result Section */
+.result-box {
+    text-align: center;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 6px;
+}
+#copyBtn {
+    background: limegreen;
+}
+#backBtn {
+    background: hotpink;
+}
+
+/* Footer - Fixed */
+.footer {
+    background: hotpink;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.footer a {
+    color: white;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="navbar">
+    <img src="mpde.jpeg" alt="Logo">
+    <a href="#">Home</a>
+</div>
+
+<!-- Form Page (Center) -->
+<div class="section active" id="formPage">
+    <div class="form-box">
+        <h2>Password Generator</h2>
+        <input type="text" id="name" placeholder="Enter Name">
+        <input type="number" id="number" placeholder="Enter Number">
+        <button onclick="startGeneration()">Generate</button>
+    </div>
+</div>
+
+<!-- Animation + Result Page -->
+<div class="section" id="resultPage">
+    <div>
+        <h2>Generating Your Password...</h2>
+
+        <!-- Loader -->
+        <div id="loader">
+            <div class="bars">
+                <div class="bar" style="--i:1"></div>
+                <div class="bar" style="--i:2"></div>
+                <div class="bar" style="--i:3"></div>
+                <div class="bar" style="--i:4"></div>
+                <div class="bar" style="--i:5"></div>
+                <div class="bar" style="--i:6"></div>
+                <div class="bar" style="--i:7"></div>
+                <div class="bar" style="--i:8"></div>
+                <div class="bar" style="--i:9"></div>
+                <div class="bar" style="--i:10"></div>
+                <div class="bar" style="--i:11"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="resultBox" class="result-box" style="display:none; margin-top:20px;">
+            <p><b>Your Password:</b> <span id="password"></span></p>
+            <button id="copyBtn" onclick="copyPassword()">Copy</button>
+            <button id="backBtn" onclick="goBack()">Back</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+      <a href="https://www.instagram.com/mahipat_suthar_09?igsh=aGJjMW04cW10MDA4" target="_blank"><i class="fab fa-instagram"></i></a> <br />
+   <br /> 
+   <br>
+   <br />
+   <span>© 2025 MP Developing. All Rights Reserved.</span>
+  
+</div>
+
+<script>
+function startGeneration() {
+    let name = document.getElementById("name").value.trim();
+    let number = document.getElementById("number").value.trim();
+
+    if(name.length < 3 || number.length < 3) {
+        alert("Please enter at least 3 letters in name and 3 digits in number");
+        return;
+    }
+
+    // Generate password
+    let namePart = name.substring(0,3);
+    let numberPart = number.substring(number.length - 3);
+    let randomPart = Math.random().toString(36).substring(2,5);
+    let finalPassword = namePart + numberPart + randomPart;
+
+    // Switch to result page
+    document.getElementById("formPage").classList.remove("active");
+    document.getElementById("resultPage").classList.add("active");
+
+    // Show loader then result
+    setTimeout(function() {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("password").innerText = finalPassword;
+    }, 3000);
+}
+
+function copyPassword() {
+    let pass = document.getElementById("password").innerText;
+    navigator.clipboard.writeText(pass);
+    alert("Password copied: " + pass);
+}
+
+function goBack() {
+    document.getElementById("resultPage").classList.remove("active");
+    document.getElementById("formPage").classList.add("active");
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("resultBox").style.display = "none";
+}
+</script>
+
+</body>
+</html>
